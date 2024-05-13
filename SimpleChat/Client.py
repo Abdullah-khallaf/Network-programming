@@ -1,4 +1,7 @@
 from socket import *
+import threading
+# this code works on single threaded
+
 # Create a socket object
 S = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
