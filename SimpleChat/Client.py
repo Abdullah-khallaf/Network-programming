@@ -1,21 +1,22 @@
 from socket import *
 import threading
-# this code works on single threaded
 
-# Create a socket object
-S = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# Multi threaded clients
+def receive_thread(Client_Socket):
+    while True:
+        x = Client_Socket.recv(2048)
+        print(x.decode('utf-8'))
+     
+Client_Socket = socket(AF_INET, SOCK_STREAM)    # Create a socket
+Host = "127.0.0.1" # Localhost
+Port = 8000 # TCP port
 
-# Get the server hostname and port
-host = "127.0.0.1"
-port = 8000 # Same port as the server
+Client_Socket.connect((Host, Port)) # Connect to the server
 
-# Connect to the server
-S.connect((host, port))
+receive = threading.Thread(target=receive_thread, args=(Client_Socket,))
+receive.start()
 
-# Send data to server
-message = "Hello, From Abdullah"
 while True:
-    S.send(input("Client: ").encode())
-    x=S.recv(2048)
-    print("server: " + x.decode())
-S.close()
+    Client_Socket.send(input("Enter: ").encode('utf-8'))
+
+  
