@@ -1,7 +1,8 @@
+from _thread import *
 from socket import *
 import threading
 
-# Multi threaded clients
+# Concurent Chat with Multi threading
 def receive_thread(Client_Socket):
     while True:
         x = Client_Socket.recv(2048)
@@ -12,11 +13,10 @@ Host = "127.0.0.1" # Localhost
 Port = 8000 # TCP port
 
 Client_Socket.connect((Host, Port)) # Connect to the server
-
-receive = threading.Thread(target=receive_thread, args=(Client_Socket,))
+                                                        #in client we don't have session we have socket
+receive = threading.Thread(target=receive_thread, args=(Client_Socket,)) # Create a thread that receives
 receive.start()
 
-while True:
-    Client_Socket.send(input("Enter: ").encode('utf-8'))
+while True: #the main thread is always send
+    Client_Socket.send(input("Client: ").encode('utf-8'))
 
-  
