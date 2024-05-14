@@ -1,28 +1,27 @@
-# from thread import *
-import threading
-from socket import *
+import socket
+try:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)    #Option Level (socket), option , value
 
-# Multie threading connection
+    host = "127.0.0.1"
+    port = 8000
+    # problems from user or server
+    s.bind((host, port))
+    s.listen(5)
+    conn, add = s.accept()
+    print("connection started from: "+ add[0])
 
-def Client_thread(conn):
-    receive = threading.Thread(target=receive_thread, args=(conn,))
-    receive.start()
-    while True:
-        conn.send(input("Enter: ").encode('utf-8'))
-        
-def receive_thread(conn):
-    while True:
-        x= conn.recv(2048)
-        print(x.decode('utf-8'))
+    while True: # true for all chat don't close until one close
+        #Note that the server sending first so here we receive 
+        msg = conn.recv(2048)
+        print("Client: " + msg.decode('utf-8'))
+        conn.send(input("Server: ").encode('utf-8'))
 
-Server_Socket = socket(AF_INET, SOCK_STREAM)
-Host = "127.0.0.1"
-Port = 8000
+    s.close()
 
-Server_Socket.bind((Host, Port))
-Server_Socket.listen(5)
+except error as e:
+    print(e)
+except KeyboardInterrupt:
+    print("Keyboard Interrupt Chat is finished")
 
-while True:
-    conn, add = Server_Socket.accept()
-    print("connection from: ", add[0])   
-    threading.Thread(target=Client_thread, args=(conn,)).start()
+
